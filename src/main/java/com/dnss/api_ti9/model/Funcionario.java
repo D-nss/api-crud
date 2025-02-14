@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -12,17 +14,32 @@ import java.util.UUID;
 @Table(name= "funcionarios")
 @Getter
 @Setter
-@AllArgsConstructor
 public class Funcionario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(name ="nome")
     private String nome;
+    @Column(name ="cpf")
     private String cpf;
+    @Column(name ="cargo")
     private String cargo;
-    private Integer salario;
-    private Date data_de_admissao;
-    @OneToMany
+    @Column(name ="salario")
+    private BigDecimal salario;
+    @Column(name ="data_de_admissao")
+    private LocalDate data_de_admissao;
+    @ManyToOne
     @JoinColumn(name="dependente_id")
     private Dependente dependentes;
+
+    public Funcionario( String nome, String cpf, String cargo, BigDecimal salario, LocalDate data_de_admissao, Dependente dependentes) {
+        this.dependentes = dependentes;
+        this.data_de_admissao = data_de_admissao;
+        this.salario = salario;
+        this.cargo = cargo;
+        this.cpf = cpf;
+        this.nome = nome;
+        this.id = UUID.randomUUID();
+    }
 }
