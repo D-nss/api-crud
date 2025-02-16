@@ -1,4 +1,22 @@
 package com.dnss.api_ti9.controller;
 
+import com.dnss.api_ti9.exception.InvalidoCPF;
+import com.dnss.api_ti9.exception.InvalidoNome;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(InvalidoCPF.class)
+    public ResponseEntity<String> handleCpfInvalidoException(InvalidoCPF ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidoNome.class)
+    public ResponseEntity<String> handleNomeInvalidoException(InvalidoNome ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
 }
