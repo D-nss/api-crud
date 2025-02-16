@@ -53,10 +53,8 @@ public class Funcionario {
 
 
 
-    public Funcionario( String nome, String cpf, String cargo, BigDecimal salario, String data_de_admissao) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate dataFinal = LocalDate.parse(data_de_admissao, formatter);
-        this.data_de_admissao = dataFinal;
+    public Funcionario( String nome, String cpf, String cargo, BigDecimal salario, LocalDate data_de_admissao) {
+        this.data_de_admissao = data_de_admissao;
         this.salario = salario;
         this.cargo = cargo;
         this.cpf = cpf;

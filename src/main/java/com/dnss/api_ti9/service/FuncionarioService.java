@@ -12,6 +12,8 @@ import com.dnss.api_ti9.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -33,13 +35,16 @@ public class FuncionarioService {
         validateCPF(funcionarioDTO.cpf());
         validateNome(funcionarioDTO.nome());
         validateSalario(funcionarioDTO.salario());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate dataFinal = LocalDate.parse(funcionarioDTO.data_de_admissao(), formatter);
+        validateDataAdmissao(dataFinal);
 
         Funcionario funcionario = new Funcionario(
                 funcionarioDTO.nome(),
                 funcionarioDTO.cpf(),
                 funcionarioDTO.cargo(),
                 funcionarioDTO.salario(),
-                funcionarioDTO.data_de_admissao());
+                dataFinal);
 
         if (funcionarioDTO.dependentes() != null) {
             for (DependenteDTO dependenteDTO : funcionarioDTO.dependentes()) {
@@ -73,6 +78,12 @@ public class FuncionarioService {
     public void validateSalario(BigDecimal salario){
         if(!(salario.intValue()>0)){
             throw new InvalidoSalario("Salário deve ser maior que zero!");
+        }
+    }
+
+    public  void validateDataAdmissao(LocalDate data){
+        if (data.isAfter(LocalDate.now())){
+            throw new InvalidoDataAdmissao("A data deve ser do passado ou presente!");
         }
     }
 
