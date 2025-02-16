@@ -1,9 +1,10 @@
 package com.dnss.api_ti9.controller;
 
 import com.dnss.api_ti9.dto.FuncionarioDTO;
-import com.dnss.api_ti9.dto.FuncionarioResponseDTO;
 import com.dnss.api_ti9.model.Funcionario;
 import com.dnss.api_ti9.service.FuncionarioService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Funcionario> createFuncionario(@RequestBody FuncionarioDTO funcionarioDTO){
         var id = funcionarioService.createFuncionario(funcionarioDTO);
-        return ResponseEntity.created(URI.create("/funcionarios/" + id.toString())).build();
+        return new ResponseEntity(id.toString(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
