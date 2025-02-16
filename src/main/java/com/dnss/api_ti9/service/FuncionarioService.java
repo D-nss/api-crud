@@ -4,12 +4,14 @@ import com.dnss.api_ti9.dto.DependenteDTO;
 import com.dnss.api_ti9.dto.FuncionarioDTO;
 import com.dnss.api_ti9.exception.InvalidoCPF;
 import com.dnss.api_ti9.exception.InvalidoNome;
+import com.dnss.api_ti9.exception.InvalidoSalario;
 import com.dnss.api_ti9.model.Dependente;
 import com.dnss.api_ti9.model.Funcionario;
 import com.dnss.api_ti9.repository.DependenteRepository;
 import com.dnss.api_ti9.repository.FuncionarioRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -30,6 +32,7 @@ public class FuncionarioService {
 
         validateCPF(funcionarioDTO.cpf());
         validateNome(funcionarioDTO.nome());
+        validateSalario(funcionarioDTO.salario());
 
         Funcionario funcionario = new Funcionario(
                 funcionarioDTO.nome(),
@@ -67,7 +70,11 @@ public class FuncionarioService {
         }
     }
 
-    public void validate
+    public void validateSalario(BigDecimal salario){
+        if(!(salario.intValue()>0)){
+            throw new InvalidoSalario("Salário deve ser maior que zero!");
+        }
+    }
 
     public static boolean isCPF(String CPF) {
         // considera-se erro CPF"s formados por uma sequencia de numeros iguais
