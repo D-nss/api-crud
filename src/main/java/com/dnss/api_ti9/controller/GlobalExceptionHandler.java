@@ -2,6 +2,7 @@ package com.dnss.api_ti9.controller;
 
 import com.dnss.api_ti9.exception.InvalidoCPF;
 import com.dnss.api_ti9.exception.InvalidoNome;
+import com.dnss.api_ti9.exception.InvalidoSalario;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidoNome.class)
     public ResponseEntity<String> handleNomeInvalidoException(InvalidoNome ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidoSalario.class)
+    public ResponseEntity<String> handleSalarioInvalidoException(InvalidoSalario ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
