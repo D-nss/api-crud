@@ -2,9 +2,7 @@ package com.dnss.api_ti9.service;
 
 import com.dnss.api_ti9.dto.DependenteDTO;
 import com.dnss.api_ti9.dto.FuncionarioDTO;
-import com.dnss.api_ti9.exception.InvalidoCPF;
-import com.dnss.api_ti9.exception.InvalidoNome;
-import com.dnss.api_ti9.exception.InvalidoSalario;
+import com.dnss.api_ti9.exception.*;
 import com.dnss.api_ti9.model.Dependente;
 import com.dnss.api_ti9.model.Funcionario;
 import com.dnss.api_ti9.repository.DependenteRepository;
@@ -14,10 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FuncionarioService {
@@ -63,6 +58,27 @@ public class FuncionarioService {
 
     }
 
+    public Optional<Funcionario> getFuncionarioById(String id){
+        var funcionario = funcionarioRepository.findById(UUID.fromString(id));
+        if(funcionario.isEmpty()){
+            throw new FuncionarioNaoExiste("Funcionário não existe!");
+        }
+        return funcionario;
+    }
+
+    public List<Funcionario> getAllFuncionarios() {
+        var funcionarios = funcionarioRepository.findAll();
+        if(funcionarios.isEmpty()){
+            throw new FuncionarioNaoExiste("Nenhum funcionário cadastrado!");
+        }
+        return funcionarios;
+    }
+
+    public void deleteFuncionarioById(String id){
+        var funcionarrio = getFuncionarioById(id);
+        funcionarioRepository.deleteById(UUID.fromString(id));
+    }
+
     public void validateCPF(String cpf){
         if(!isCPF(cpf)) {
             throw new InvalidoCPF("CPF inválido!");
@@ -86,6 +102,8 @@ public class FuncionarioService {
             throw new InvalidoDataAdmissao("A data deve ser do passado ou presente!");
         }
     }
+
+
 
     public static boolean isCPF(String CPF) {
         // considera-se erro CPF"s formados por uma sequencia de numeros iguais

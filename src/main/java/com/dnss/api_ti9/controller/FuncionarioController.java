@@ -23,11 +23,24 @@ public class FuncionarioController {
     @PostMapping
     public ResponseEntity<Funcionario> createFuncionario(@RequestBody FuncionarioDTO funcionarioDTO){
         var id = funcionarioService.createFuncionario(funcionarioDTO);
-        return new ResponseEntity(id.toString(), HttpStatus.CREATED);
+        return new ResponseEntity("ID do novo Funcionario: " + id.toString(), HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
     public  ResponseEntity<Funcionario> getFuncionarioById(@PathVariable("id") String id){
-        return null;
+        var funcionario = funcionarioService.getFuncionarioById(id);
+        return new ResponseEntity(funcionario.get(), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/")
+    public  ResponseEntity<Funcionario> getAllFuncionarios(){
+        var funcionarios = funcionarioService.getAllFuncionarios();
+        return new ResponseEntity(funcionarios, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Funcionario> deleteFuncionarioById(@PathVariable("id") String id){
+        funcionarioService.deleteFuncionarioById(id);
+        return new ResponseEntity(null, HttpStatus.CREATED);
     }
 }
