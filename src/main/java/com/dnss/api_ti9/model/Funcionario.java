@@ -24,7 +24,7 @@ public class Funcionario {
     {
         this.nome = nome;
     }
-    @Column(name ="cpf")
+    @Column(name ="cpf", unique = true)
     private String cpf;
     {
         this.cpf = cpf;
@@ -45,13 +45,14 @@ public class Funcionario {
         this.data_de_admissao = data_de_admissao;
     }
     @OneToMany(mappedBy = "funcionario", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Dependente> dependentes = new ArrayList<>();
+    private List<Dependente> dependentes;
     @CreationTimestamp
     private Instant creationTimeStamp;
     @UpdateTimestamp
     private Instant updateTimeStamp;
 
-
+    public Funcionario() {
+    }
 
     public Funcionario( String nome, String cpf, String cargo, BigDecimal salario, LocalDate data_de_admissao) {
         this.data_de_admissao = data_de_admissao;
@@ -60,6 +61,7 @@ public class Funcionario {
         this.cpf = cpf;
         this.nome = nome;
         this.creationTimeStamp = Instant.now();
+        this.dependentes= new ArrayList<Dependente>();
     }
 
     public void addDependente(Dependente dependente) {
