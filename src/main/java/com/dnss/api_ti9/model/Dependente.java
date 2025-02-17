@@ -1,5 +1,6 @@
 package com.dnss.api_ti9.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,6 +31,7 @@ public class Dependente {
         this.parentesco = parentesco;
     }
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
     {
@@ -40,6 +42,8 @@ public class Dependente {
     @UpdateTimestamp
     private Instant updateTimeStamp;
 
+    public Dependente() {
+    }
 
     public Dependente(String nome, LocalDate data_de_nascimento, String parentesco, Funcionario funcionario) {
         this.nome = nome;
