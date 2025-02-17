@@ -32,4 +32,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleFuncionarioNaoExisteException(FuncionarioNaoExiste ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
+    @ExceptionHandler(DependenteNaoExiste.class)
+    public ResponseEntity<String> handleDependenteNaoExisteException(DependenteNaoExiste ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ExceptionHandler(InvalidoDataNascimento.class)
+    public ResponseEntity<String> handleDependenteNaoExisteException(InvalidoDataNascimento ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ExceptionHandler(InvalidoParentesco.class)
+    public ResponseEntity<String> handleDependenteNaoExisteException(InvalidoParentesco ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ExceptionHandler(CampoObrigatorio.class)
+    public ResponseEntity<String> handleDependenteNaoExisteException(CampoObrigatorio ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
 }
