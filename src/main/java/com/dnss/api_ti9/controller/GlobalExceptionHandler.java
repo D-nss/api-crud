@@ -1,9 +1,6 @@
 package com.dnss.api_ti9.controller;
 
-import com.dnss.api_ti9.exception.InvalidoCPF;
-import com.dnss.api_ti9.exception.InvalidoDataAdmissao;
-import com.dnss.api_ti9.exception.InvalidoNome;
-import com.dnss.api_ti9.exception.InvalidoSalario;
+import com.dnss.api_ti9.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,6 +26,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidoDataAdmissao.class)
     public ResponseEntity<String> handleDataAdmissaonvalidoException(InvalidoDataAdmissao ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+    @ExceptionHandler(FuncionarioNaoExiste.class)
+    public ResponseEntity<String> handleFuncionarioNaoExisteException(FuncionarioNaoExiste ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 }
