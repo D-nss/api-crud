@@ -2,6 +2,7 @@ package com.dnss.api_ti9.service;
 
 import com.dnss.api_ti9.dto.DependenteDTO;
 import com.dnss.api_ti9.dto.FuncionarioDTO;
+import com.dnss.api_ti9.dto.FuncionarioResponseDTO;
 import com.dnss.api_ti9.exception.*;
 import com.dnss.api_ti9.model.Dependente;
 import com.dnss.api_ti9.model.Funcionario;
@@ -26,7 +27,7 @@ public class FuncionarioService {
     }
 
     public UUID createFuncionario(FuncionarioDTO funcionarioDTO){
-
+        validateCampos(funcionarioDTO);
         validateCPF(funcionarioDTO.cpf());
         validateNome(funcionarioDTO.nome());
         validateSalario(funcionarioDTO.salario());
@@ -43,6 +44,9 @@ public class FuncionarioService {
 
         if (funcionarioDTO.dependentes() != null) {
             for (DependenteDTO dependenteDTO : funcionarioDTO.dependentes()) {
+                dependenteService.validateCampos(dependenteDTO);
+                dependenteService.validateParentesco(dependenteDTO.parentesco());
+                dependenteService.validateDataNascimento(dependenteDTO.data_de_nascimento());
                 Dependente dependente = new Dependente(
                         dependenteDTO.nome(),
                         dependenteDTO.data_de_nascimento(),
@@ -66,22 +70,85 @@ public class FuncionarioService {
         return funcionario;
     }
 
-    public List<Funcionario> getAllFuncionarios() {
+    public List<FuncionarioResponseDTO> getAllFuncionarios() {
         var funcionarios = funcionarioRepository.findAll();
         if(funcionarios.isEmpty()){
             throw new FuncionarioNaoExiste("Nenhum funcionário cadastrado!");
         }
-        return funcionarios;
+        List<FuncionarioResponseDTO> lista = new ArrayList<>();
+        for(Funcionario funcionario: funcionarios){
+            FuncionarioResponseDTO dto = new FuncionarioResponseDTO(funcionario.getNome(), funcionario.getCpf(), funcionario.getCargo(), funcionario.getSalario(), funcionario.getData_de_admissao(), funcionario.getDependentes());
+            lista.add(dto);
+        }
+        return lista;
     }
 
     public void deleteFuncionarioById(String id){
-        var funcionarrio = getFuncionarioById(id);
+        var funcionario = getFuncionarioById(id);
         funcionarioRepository.deleteById(UUID.fromString(id));
+    }
+
+    public Funcionario updateFuncionarioById(String id, FuncionarioDTO funcionarioDTO, String idDependente){
+        var funcionario = getFuncionarioById(id);
+        if(funcionarioDTO.nome()!=null){
+            validateNome(funcionarioDTO.nome());
+            funcionario.get().setNome(funcionarioDTO.nome());
+        }
+        if(funcionarioDTO.cargo()!=null){
+            funcionario.get().setCargo(funcionarioDTO.cargo());
+        }
+        if(funcionarioDTO.cpf()!=null){
+            validateCPF(funcionarioDTO.cpf());
+            funcionario.get().setCpf(funcionarioDTO.cpf());
+        }
+        if(funcionarioDTO.salario()!=null){
+            validateSalario(funcionarioDTO.salario());
+            funcionario.get().setSalario(funcionarioDTO.salario());
+        }
+        if(funcionarioDTO.data_de_admissao()!=null){
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate dataFinal = LocalDate.parse(funcionarioDTO.data_de_admissao(), formatter);
+            validateDataAdmissao(dataFinal);
+            funcionario.get().setData_de_admissao(dataFinal);
+        }
+        if(funcionarioDTO.dependentes()!=null){
+            for(DependenteDTO dependenteDTO: funcionarioDTO.dependentes()){
+                dependenteService.updateDependenteById(idDependente, dependenteDTO);
+                }
+            }
+
+
+        funcionarioRepository.save(funcionario.get());
+        return funcionario.get();
+    }
+
+//VALIDACOES//////////////////////////////////////////////////////////////////////
+
+    public void validateCampos(FuncionarioDTO funcionarioDTO){
+        if(funcionarioDTO.nome()==null){
+            throw new CampoObrigatorio("Campo obrigatório não preenchido!");
+        }
+        if(funcionarioDTO.salario()==null){
+            throw new CampoObrigatorio("Campo obrigatório não preenchido!");
+        }
+        if(funcionarioDTO.cargo()==null){
+            throw new CampoObrigatorio("Campo obrigatório não preenchido!");
+        }
+        if(funcionarioDTO.data_de_admissao()==null){
+            throw new CampoObrigatorio("Campo obrigatório não preenchido!");
+        }
+        if(funcionarioDTO.cpf()==null){
+            throw new CampoObrigatorio("Campo obrigatório não preenchido!");
+        }
     }
 
     public void validateCPF(String cpf){
         if(!isCPF(cpf)) {
             throw new InvalidoCPF("CPF inválido!");
+        }
+        var funcionario = funcionarioRepository.findByCpf(cpf);
+        if(funcionario.isPresent()){
+            throw new InvalidoCPF("CPF já cadastrado!");
         }
     }
 
@@ -102,8 +169,6 @@ public class FuncionarioService {
             throw new InvalidoDataAdmissao("A data deve ser do passado ou presente!");
         }
     }
-
-
 
     public static boolean isCPF(String CPF) {
         // considera-se erro CPF"s formados por uma sequencia de numeros iguais
@@ -160,4 +225,6 @@ public class FuncionarioService {
             return(false);
         }
     }
+
+
 }
