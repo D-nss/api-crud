@@ -51,7 +51,8 @@ public class FuncionarioController {
     @PutMapping("/{id}")
     public  ResponseEntity<Funcionario> updateFuncionarioById(@PathVariable("id") String id, @RequestBody FuncionarioDTO funcionarioDTO){
         var funcionario =funcionarioService.updateFuncionarioById(id, funcionarioDTO, null);
-        return new ResponseEntity(funcionario, HttpStatus.CREATED);
+        FuncionarioResponseDTO dto = new FuncionarioResponseDTO(funcionario.getNome(), funcionario.getCpf(), funcionario.getCargo(), funcionario.getSalario(), funcionario.getData_de_admissao(), funcionario.getDependentes());
+        return new ResponseEntity(dto, HttpStatus.CREATED);
     }
     @PutMapping("/{id}/{idDependente}")
     public  ResponseEntity<Funcionario> updateFuncionarioDependenteById(@PathVariable("id") String id, @RequestBody FuncionarioDTO funcionarioDTO,  @PathVariable("idDependente") String idDependente){
