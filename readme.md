@@ -16,7 +16,7 @@ Este projeto é uma aplicação Spring Boot que gerencia funcionários e seus de
 
 1. Clone o repositório:
 
-        git clone https://github.com/seu-repositorio/api-ti9.git
+        git clone https://github.com/D-nss/api-crud.git
 
 2. Navegue até o diretório do projeto:
 
@@ -94,7 +94,7 @@ A configuração é feita no arquivo aplication.properties, nesse caso o DB tem 
 - GET /dependentes/{id}: Busca um dependente por ID.
 
 
-- GET /dependentes: Lista todos os dependentes.
+- GET /dependentes/: Lista todos os dependentes.
 
 
 - PUT /dependentes/{id}: Atualiza um dependente.
