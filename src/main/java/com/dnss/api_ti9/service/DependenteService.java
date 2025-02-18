@@ -67,9 +67,11 @@ public class DependenteService {
     public Dependente updateDependenteById(String id, DependenteDTO dependenteDTO){
         var dependente = getDependenteById(id);
         if(dependenteDTO.data_de_nascimento()!=null){
+            validateDataNascimento(dependenteDTO.data_de_nascimento());
             dependente.get().setData_de_nascimento(dependenteDTO.data_de_nascimento());
         }
         if(dependenteDTO.parentesco()!=null){
+            validateParentesco(dependenteDTO.parentesco());
             dependente.get().setParentesco(dependenteDTO.parentesco());
         }
         if(dependenteDTO.nome()!=null){
